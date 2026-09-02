@@ -3,153 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자기소개서 글자수 및 바이트 계산기</title>
+    <title>자기소개서 글자수 & 바이트 계산기 | 취업 자소서 실시간 분석기</title>
+    <meta name="description" content="공백 포함/제외 글자수, EUC-KR 및 UTF-8 바이트 계산, 원고지 분량, 목표 글자수 달성률, 로컬 자동저장을 지원하는 100% 안전한 무료 글자수 계산기입니다.">
+    <meta name="keywords" content="글자수계산기, 자소서글자수, 바이트계산기, 공백제외글자수, 자기소개서, 원고지분량">
+    <link rel="canonical" href="https://somsoo.github.io/resume-text-counter/">
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="자기소개서 글자수 & 바이트 실시간 계산기">
+    <meta property="og:description" content="서버 전송 없는 100% 안전한 자소서 글자수/바이트/원고지/스피치 시간 계산기">
+    
+    <!-- Tailwind & Icons -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
-        body {
-            background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-            min-height: 100vh;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
-        }
-        .glass-banner {
-            background: rgba(240, 240, 240, 0.5);
-            border: 1px dashed #ccc;
-        }
+        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+        body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
+        .stat-card { transition: transform 0.15s ease-in-out; }
+        .stat-card:hover { transform: translateY(-2px); }
     </style>
 </head>
-<body class="text-gray-800 flex flex-col items-center py-10 px-4">
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
-    <!-- Container -->
-    <div class="w-full max-w-3xl flex-1 flex flex-col gap-6">
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-20 shadow-sm">
+        <div class="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fas fa-file-signature text-blue-600 text-xl"></i>
+                <h1 class="font-bold text-lg text-slate-900">자소서 글자수·바이트 계산기</h1>
+            </div>
+            <span class="text-xs bg-emerald-100 text-emerald-700 font-semibold px-2.5 py-1 rounded-full flex items-center gap-1">
+                <i class="fas fa-shield-alt"></i> 100% 로컬 보안
+            </span>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-6 w-full flex-grow flex flex-col gap-6">
         
-        <!-- Header -->
-        <header class="text-center">
-            <h1 class="text-3xl font-bold mb-2">글자수 및 바이트 계산기</h1>
-            <p class="text-gray-600">자기소개서, 이력서 등 텍스트의 글자수와 바이트를 실시간으로 확인하세요.</p>
-        </header>
-
-        <!-- AdSense Placeholder Top -->
-        <div class="glass-banner w-full h-24 flex items-center justify-center rounded-xl text-gray-500 text-sm">
-            [구글 애드센스 광고 자리]
+        <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-2">
+                <label for="targetInput" class="text-xs font-bold text-slate-500 uppercase tracking-wider">목표 글자수</label>
+                <input type="number" id="targetInput" value="1000" step="100" class="w-24 px-3 py-1.5 border border-slate-300 rounded-lg text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <span class="text-xs text-slate-500">자</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <label class="text-xs font-bold text-slate-500">바이트 기준</label>
+                <select id="byteMode" class="text-xs font-medium border border-slate-300 rounded-lg px-2.5 py-1.5 bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="euc-kr" selected>EUC-KR (한글 2B / 영문·공백 1B)</option>
+                    <option value="utf-8">UTF-8 (한글 3B / 영문·공백 1B)</option>
+                </select>
+            </div>
         </div>
 
-        <!-- Main Content -->
-        <main class="glass rounded-2xl p-6 flex flex-col gap-4">
-            <textarea id="textInput" class="w-full h-64 p-4 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-400 resize-none bg-white/50" placeholder="여기에 텍스트를 입력하세요..."></textarea>
-            
-            <!-- Stats -->
-            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div class="glass rounded-xl p-4 text-center">
-                    <p class="text-sm text-gray-500 mb-1">공백 포함</p>
-                    <p class="text-2xl font-bold text-blue-600"><span id="countWithSpaces">0</span> <span class="text-sm font-normal text-gray-600">자</span></p>
-                </div>
-                <div class="glass rounded-xl p-4 text-center">
-                    <p class="text-sm text-gray-500 mb-1">공백 제외</p>
-                    <p class="text-2xl font-bold text-green-600"><span id="countWithoutSpaces">0</span> <span class="text-sm font-normal text-gray-600">자</span></p>
-                </div>
-                <div class="glass rounded-xl p-4 text-center">
-                    <p class="text-sm text-gray-500 mb-1">바이트 (Byte)</p>
-                    <p class="text-2xl font-bold text-purple-600"><span id="byteCount">0</span> <span class="text-sm font-normal text-gray-600">B</span></p>
-                </div>
-            </div>
-            
-            <div class="flex justify-end gap-2 mt-2">
-                <button id="clearBtn" class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg transition-colors text-sm font-medium">초기화</button>
-                <button id="copyBtn" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors text-sm font-medium">복사하기</button>
-            </div>
-        </main>
-
-        <!-- AdSense Placeholder Bottom -->
-        <div class="glass-banner w-full h-24 flex items-center justify-center rounded-xl text-gray-500 text-sm">
-            [구글 애드센스 광고 자리]
+        <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+            <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
         </div>
 
-    </div>
+        <div class="bg-white rounded-2xl p-4 sm:p-6 border border-slate-200 shadow-sm flex flex-col gap-4">
+            <textarea id="textInput" class="w-full h-72 sm:h-80 p-4 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y text-slate-800 leading-relaxed placeholder:text-slate-400 font-normal text-base" placeholder="자기소개서 문항 내용이나 텍스트를 붙여넣으세요... (브라우저에 실시간 자동 임시저장됩니다)"></textarea>
+            
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                <span id="autoSaveStatus" class="text-xs text-slate-400 flex items-center gap-1">
+                    <i class="fas fa-check-circle text-emerald-500"></i> 자동 저장됨
+                </span>
+                <div class="flex gap-2">
+                    <button id="clearBtn" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 text-xs font-semibold rounded-lg transition"><i class="fas fa-trash-alt mr-1"></i>비우기</button>
+                    <button id="copyBtn" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold rounded-lg transition flex items-center gap-1"><i class="fas fa-copy"></i>복사하기</button>
+                </div>
+            </div>
+        </div>
 
-    <!-- Footer -->
-    <footer class="w-full max-w-3xl mt-12 pt-6 border-t border-gray-200/50 flex flex-col md:flex-row items-center justify-between text-sm text-gray-500">
-        <p>&copy; 2026 Resume Text Counter. All rights reserved.</p>
-        <div class="flex gap-4 mt-2 md:mt-0">
-            <a href="terms.html" class="hover:text-gray-800 transition-colors">이용약관</a>
-            <a href="privacy.html" class="hover:text-gray-800 transition-colors">개인정보처리방침</a>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div class="stat-card bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
+                <p class="text-xs font-semibold text-slate-500 mb-1">공백 포함</p>
+                <p class="text-xl sm:text-2xl font-black text-blue-600"><span id="countWithSpaces">0</span> <span class="text-xs font-normal text-slate-400">자</span></p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
+                <p class="text-xs font-semibold text-slate-500 mb-1">공백 제외</p>
+                <p class="text-xl sm:text-2xl font-black text-emerald-600"><span id="countWithoutSpaces">0</span> <span class="text-xs font-normal text-slate-400">자</span></p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
+                <p class="text-xs font-semibold text-slate-500 mb-1">용량 (Byte)</p>
+                <p class="text-xl sm:text-2xl font-black text-purple-600"><span id="byteCount">0</span> <span class="text-xs font-normal text-slate-400">B</span></p>
+            </div>
+            <div class="stat-card bg-white p-4 rounded-xl border border-slate-200 text-center shadow-sm">
+                <p class="text-xs font-semibold text-slate-500 mb-1">200자 원고지</p>
+                <p class="text-xl sm:text-2xl font-black text-amber-600"><span id="manuscriptCount">0</span> <span class="text-xs font-normal text-slate-400">매</span></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 bg-slate-100/70 p-3.5 rounded-xl text-center text-xs text-slate-600 font-medium border border-slate-200/60">
+            <div>단어 수: <b id="wordCount" class="text-slate-900">0</b>개</div>
+            <div>문장 수: <b id="sentenceCount" class="text-slate-900">0</b>개</div>
+            <div>예상 낭독시간: <b id="speechTime" class="text-slate-900">0초</b></div>
+        </div>
+
+        <div class="w-full bg-white rounded-xl border border-dashed border-slate-300 p-4 text-center min-h-[100px] flex items-center justify-center">
+            <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2228289204702106" data-ad-slot="auto" data-ad-format="auto" data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p>&copy; 2026 자소서 글자수 계산기. Zero-Data 로컬 보호.</p>
+            <div class="flex gap-4">
+                <a href="terms.html" class="hover:text-slate-800 underline">이용약관</a>
+                <a href="privacy.html" class="hover:text-slate-800 underline">개인정보처리방침</a>
+            </div>
         </div>
     </footer>
 
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106" crossorigin="anonymous"></script>
+
     <script>
         const textInput = document.getElementById('textInput');
+        const targetInput = document.getElementById('targetInput');
+        const byteMode = document.getElementById('byteMode');
+        const progressBar = document.getElementById('progressBar');
         const countWithSpaces = document.getElementById('countWithSpaces');
         const countWithoutSpaces = document.getElementById('countWithoutSpaces');
         const byteCount = document.getElementById('byteCount');
+        const manuscriptCount = document.getElementById('manuscriptCount');
+        const wordCount = document.getElementById('wordCount');
+        const sentenceCount = document.getElementById('sentenceCount');
+        const speechTime = document.getElementById('speechTime');
         const clearBtn = document.getElementById('clearBtn');
         const copyBtn = document.getElementById('copyBtn');
+        const autoSaveStatus = document.getElementById('autoSaveStatus');
 
-        // 바이트 계산 함수 (EUC-KR 기준 한글 2바이트, 영어/숫자/공백 1바이트)
-        function getByteLength(str) {
-            let byteLength = 0;
-            for (let i = 0; i < str.length; i++) {
-                const charCode = str.charCodeAt(i);
-                if (charCode <= 0x00007F) {
-                    byteLength += 1;
-                } else {
-                    byteLength += 2;
-                }
+        function calculateBytes(str, mode) {
+            let bytes = 0;
+            if (mode === 'utf-8') {
+                return new Blob([str]).size;
             }
-            return byteLength;
+            for (let i = 0; i < str.length; i++) {
+                const code = str.charCodeAt(i);
+                bytes += (code <= 0x007F) ? 1 : 2;
+            }
+            return bytes;
         }
 
         function updateStats() {
             const text = textInput.value;
-            
-            // 공백 포함 글자수 (줄바꿈 포함)
-            const withSpaces = text.length;
-            
-            // 공백 제외 글자수 (모든 공백, 탭, 줄바꿈 제거)
-            const withoutSpaces = text.replace(/[\s]/g, '').length;
-            
-            // 바이트 수
-            const bytes = getByteLength(text);
+            const target = parseInt(targetInput.value, 10) || 1000;
+            const mode = byteMode.value;
 
-            // UI 업데이트
+            const withSpaces = [...text].length;
+            const withoutSpaces = [...text.replace(/\s/g, '')].length;
+            const bytes = calculateBytes(text, mode);
+            
+            const manuscript = Math.ceil(withSpaces / 200);
+
+            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+            const sentences = text.trim() ? text.split(/[.!?]+/).filter(s => s.trim().length > 0).length : 0;
+            
+            const minutes = withSpaces / 330;
+            const totalSec = Math.round(minutes * 60);
+            const formattedTime = totalSec >= 60 ? `${Math.floor(totalSec / 60)}분 ${totalSec % 60}초` : `${totalSec}초`;
+
             countWithSpaces.textContent = withSpaces.toLocaleString();
             countWithoutSpaces.textContent = withoutSpaces.toLocaleString();
             byteCount.textContent = bytes.toLocaleString();
+            manuscriptCount.textContent = manuscript.toLocaleString();
+            wordCount.textContent = words.toLocaleString();
+            sentenceCount.textContent = sentences.toLocaleString();
+            speechTime.textContent = formattedTime;
+
+            const progress = Math.min(Math.round((withSpaces / target) * 100), 100);
+            progressBar.style.width = `${progress}%`;
+            if (withSpaces > target) {
+                progressBar.className = 'bg-rose-500 h-2.5 rounded-full transition-all duration-300';
+            } else {
+                progressBar.className = 'bg-blue-600 h-2.5 rounded-full transition-all duration-300';
+            }
+
+            localStorage.setItem('resume_draft_text', text);
+            autoSaveStatus.innerHTML = '<i class="fas fa-check-circle text-emerald-500"></i> 자동 저장됨';
         }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            const saved = localStorage.getItem('resume_draft_text');
+            if (saved) {
+                textInput.value = saved;
+            }
+            updateStats();
+        });
+
         textInput.addEventListener('input', updateStats);
+        targetInput.addEventListener('input', updateStats);
+        byteMode.addEventListener('change', updateStats);
 
         clearBtn.addEventListener('click', () => {
+            if (textInput.value && !confirm('입력한 내용을 모두 지우시겠습니까?')) return;
             textInput.value = '';
+            localStorage.removeItem('resume_draft_text');
             updateStats();
             textInput.focus();
         });
 
         copyBtn.addEventListener('click', async () => {
             if (!textInput.value) return;
+            copyBtn.disabled = true;
             try {
-                await navigator.clipboard.writeText(textInput.value);
-                const originalText = copyBtn.textContent;
-                copyBtn.textContent = '복사완료!';
-                copyBtn.classList.replace('bg-blue-500', 'bg-green-500');
-                copyBtn.classList.replace('hover:bg-blue-600', 'hover:bg-green-600');
-                
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(textInput.value);
+                } else {
+                    textInput.select();
+                    document.execCommand('copy');
+                }
+                copyBtn.innerHTML = '<i class="fas fa-check"></i> 복사완료!';
+                copyBtn.classList.replace('bg-blue-600', 'bg-emerald-600');
                 setTimeout(() => {
-                    copyBtn.textContent = originalText;
-                    copyBtn.classList.replace('bg-green-500', 'bg-blue-500');
-                    copyBtn.classList.replace('hover:bg-green-600', 'hover:bg-blue-600');
-                }, 2000);
-            } catch (err) {
-                alert('클립보드 복사에 실패했습니다.');
+                    copyBtn.innerHTML = '<i class="fas fa-copy"></i> 복사하기';
+                    copyBtn.classList.replace('bg-emerald-600', 'bg-blue-600');
+                    copyBtn.disabled = false;
+                }, 1500);
+            } catch (e) {
+                alert('복사에 실패했습니다. 직접 텍스트를 선택하여 복사해주세요.');
+                copyBtn.disabled = false;
             }
         });
-
-        // 초기화
-        updateStats();
     </script>
 </body>
 </html>
