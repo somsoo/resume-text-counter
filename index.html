@@ -3,25 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>자기소개서 글자수 & 바이트 계산기 | 취업 자소서 실시간 분석기</title>
-    <meta name="description" content="공백 포함/제외 글자수, EUC-KR 및 UTF-8 바이트 계산, 원고지 분량, 목표 글자수 달성률, 로컬 자동저장을 지원하는 100% 안전한 무료 글자수 계산기입니다.">
-    <meta name="keywords" content="글자수계산기, 자소서글자수, 바이트계산기, 공백제외글자수, 자기소개서, 원고지분량">
-    <link rel="canonical" href="https://somsoo.github.io/resume-text-counter/">
-    
-    <!-- Open Graph -->
+    <meta name="robots" content="index, follow">
+    <title>자소서 글자수 & 바이트 계산기 | 취업 자기소개서 공백포함·제외 실시간 검사기</title>
+    <meta name="description" content="대기업·공기업 입사지원서 기준 공백 포함/제외 글자수, 영문/한글 바이트(Byte 2B/3B), 단어수 및 단락수를 실시간 측정하고 글자수 제한 오차를 완벽 방지합니다.">
+    <meta name="keywords" content="자소서 글자수 계산기, 글자수 세기, 공백제외 글자수, 바이트 계산기, 자기소개서 분량 검사, 취업 자소서 글자수, 바이트 변환">
+    <link rel="canonical" href="https://resume-text-counter.enjoy-onepage.com/">
+
+    <!-- 파비콘 & PWA 매니페스트 -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <meta name="theme-color" content="#0D9488">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="자소서글자수">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <link rel="manifest" href='data:application/manifest+json,{"name":"자소서 글자수 & 바이트 계산기 | 취업 자기소개서 공백포함·제외 실시간 검사기","short_name":"자소서글자수","description":"대기업·공기업 입사지원서 기준 공백 포함/제외 글자수, 영문/한글 바이트(Byte 2B/3B), 단어수 및 단락수를 실시간 측정하고 글자수 제한 오차를 완벽 방지합니다.","start_url":"/","display":"standalone","theme_color":"#0D9488","background_color":"#0F172A","lang":"ko","icons":[{"src":"https://resume-text-counter.enjoy-onepage.com/icon.png","sizes":"512x512","type":"image/png"}]}'>
+
+    <!-- 오픈그래프 (OpenGraph) 메타 태그 -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="자기소개서 글자수 & 바이트 실시간 계산기">
-    <meta property="og:description" content="서버 전송 없는 100% 안전한 자소서 글자수/바이트/원고지/스피치 시간 계산기">
-    
-    <!-- Tailwind & Icons -->
+    <meta property="og:site_name" content="자소서글자수">
+    <meta property="og:title" content="자소서 글자수 & 바이트 계산기 | 취업 자기소개서 공백포함·제외 실시간 검사기">
+    <meta property="og:description" content="대기업·공기업 입사지원서 기준 공백 포함/제외 글자수, 영문/한글 바이트(Byte 2B/3B), 단어수 및 단락수를 실시간 측정하고 글자수 제한 오차를 완벽 방지합니다.">
+    <meta property="og:url" content="https://resume-text-counter.enjoy-onepage.com/">
+    <meta property="og:image" content="https://resume-text-counter.enjoy-onepage.com/og-image.png">
+    <meta property="og:image:width" content="800">
+    <meta property="og:image:height" content="800">
+    <meta property="og:locale" content="ko_KR">
+
+    <!-- 트위터 카드 (Twitter Card) -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="자소서 글자수 & 바이트 계산기 | 취업 자기소개서 공백포함·제외 실시간 검사기">
+    <meta name="twitter:description" content="대기업·공기업 입사지원서 기준 공백 포함/제외 글자수, 영문/한글 바이트(Byte 2B/3B), 단어수 및 단락수를 실시간 측정하고 글자수 제한 오차를 완벽 방지합니다.">
+    <meta name="twitter:image" content="https://resume-text-counter.enjoy-onepage.com/og-image.png">
+
+    <!-- JSON-LD 구조화 데이터 (WebApplication Schema) -->
+    <script type="application/ld+json">
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "자소서 글자수 & 바이트 계산기 | 취업 자기소개서 공백포함·제외 실시간 검사기",
+        "alternateName": "자소서글자수",
+        "url": "https://resume-text-counter.enjoy-onepage.com/",
+        "description": "대기업·공기업 입사지원서 기준 공백 포함/제외 글자수, 영문/한글 바이트(Byte 2B/3B), 단어수 및 단락수를 실시간 측정하고 글자수 제한 오차를 완벽 방지합니다.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "All",
+        "inLanguage": "ko",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "KRW"
+        }
+      }
+    ]
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
         body { font-family: 'Pretendard', sans-serif; background-color: #f8fafc; }
         .stat-card { transition: transform 0.15s ease-in-out; }
         .stat-card:hover { transform: translateY(-2px); }
     </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body class="text-slate-800 min-h-screen flex flex-col justify-between">
 
