@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>바이트 계산 | 한글 2바이트 vs 3바이트, 글자수 바이트 변환</title>
+<meta name="description" content="한글 한 글자는 EUC-KR(완성형)에서 2바이트, UTF-8에서 3바이트입니다. 바이트 제한이 있는 입력칸, 문자 메시지, 데이터베이스에서 몇 글자까지 들어가는지 계산하는 방법을 정리했습니다."/>
+<meta name="robots" content="index, follow"/>
+<link rel="canonical" href="https://resume-text-counter.enjoy-onepage.com/byte-calculation.html"/>
+<meta property="og:type" content="article"/>
+<meta property="og:locale" content="ko_KR"/>
+<meta property="og:url" content="https://resume-text-counter.enjoy-onepage.com/byte-calculation.html"/>
+<meta property="og:site_name" content="자소서 글자수·바이트 계산기"/>
+<meta property="og:title" content="바이트 계산 | 한글 2바이트 vs 3바이트, 글자수 바이트 변환"/>
+<meta property="og:description" content="한글 한 글자는 EUC-KR(완성형)에서 2바이트, UTF-8에서 3바이트입니다. 바이트 제한이 있는 입력칸, 문자 메시지, 데이터베이스에서 몇 글자까지 들어가는지 계산하는 방법을 정리했습니다."/>
+<meta property="og:image" content="https://resume-text-counter.enjoy-onepage.com/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<link rel="icon" href="/favicon.ico"/>
+<script async crossorigin="anonymous" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2228289204702106"></script>
+<script type="application/ld+json">[{"@context": "https://schema.org", "@type": "Article", "headline": "바이트 계산: 한글은 2바이트일까 3바이트일까", "description": "한글 한 글자는 EUC-KR(완성형)에서 2바이트, UTF-8에서 3바이트입니다. 바이트 제한이 있는 입력칸, 문자 메시지, 데이터베이스에서 몇 글자까지 들어가는지 계산하는 방법을 정리했습니다.", "inLanguage": "ko-KR", "dateModified": "2026-10-30", "datePublished": "2026-10-30", "mainEntityOfPage": "https://resume-text-counter.enjoy-onepage.com/byte-calculation.html", "author": {"@type": "Organization", "name": "Enjoy OnePage", "url": "https://enjoy-onepage.com/"}, "publisher": {"@type": "Organization", "name": "Enjoy OnePage", "url": "https://enjoy-onepage.com/"}}, {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "바이트 제한인데 어떤 방식인지 모르겠어요.", "acceptedAnswer": {"@type": "Answer", "text": "짧은 한글 문장을 넣어 보고, 시스템이 보여 주는 바이트 수가 글자수의 2배인지 3배인지 보면 알 수 있습니다."}}, {"@type": "Question", "name": "영어로 쓰면 더 많이 쓸 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "바이트 기준이면 그렇습니다. 영문은 1바이트라 같은 제한에 한글보다 2~3배 많은 글자가 들어갑니다."}}, {"@type": "Question", "name": "특수문자 ·, ※는 몇 바이트인가요?", "acceptedAnswer": {"@type": "Answer", "text": "EUC-KR에서는 2바이트, UTF-8에서는 대부분 2~3바이트입니다."}}]}, {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "자소서 글자수·바이트 계산기", "item": "https://resume-text-counter.enjoy-onepage.com/"}, {"@type": "ListItem", "position": 2, "name": "바이트 계산: 한글은 2바이트일까 3바이트일까", "item": "https://resume-text-counter.enjoy-onepage.com/byte-calculation.html"}]}]</script>
+<style>:root{--a:#2563eb}*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#1e293b;background:#f8fafc;line-height:1.75;word-break:keep-all;overflow-wrap:break-word}
+header{background:#fff;border-bottom:1px solid #e2e8f0}header .in{max-width:760px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+header a{color:var(--a);font-weight:800;text-decoration:none}main{max-width:760px;margin:0 auto;padding:16px}
+.crumb{font-size:13px;color:#64748b;margin:4px 0 8px}.crumb a{color:#64748b}h1{font-size:1.55rem;line-height:1.4;margin:.3em 0 .6em}
+h2{font-size:1.2rem;margin:1.8em 0 .5em;padding-left:10px;border-left:4px solid var(--a)}p,li{font-size:16px}
+.sum{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:14px 18px}.sum ul{margin:0;padding-left:1.1em}.sum li{margin:.3em 0}
+table{width:100%;border-collapse:collapse;background:#fff;margin:.8em 0;font-size:15px}th,td{border:1px solid #e2e8f0;padding:8px 10px;text-align:left}th{background:#f1f5f9}
+.tw{overflow-x:auto}.note{font-size:14px;color:#64748b}.cta{display:block;text-align:center;background:var(--a);color:#fff;font-weight:800;padding:14px;border-radius:12px;text-decoration:none;margin:24px 0}
+.faq details{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 14px;margin:8px 0}.faq summary{font-weight:700;cursor:pointer}
+.src{font-size:14px;color:#475569}.rel a{display:block;padding:10px 12px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;margin:6px 0;color:#1e293b;text-decoration:none;font-weight:600}
+.ad{margin:16px auto;text-align:center;overflow:hidden;max-width:100%}footer{text-align:center;font-size:13px;color:#64748b;padding:24px 16px;border-top:1px solid #e2e8f0;background:#fff;margin-top:32px}footer a{color:#64748b;margin:0 6px}</style>
+</head>
+<body>
+<header><div class="in"><a href="/">자소서 글자수·바이트 계산기</a><a href="/" style="font-size:14px">계산기 열기 →</a></div></header>
+<div class="ad"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2228289204702106" data-ad-slot="3824727725" data-ad-format="horizontal" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
+<main>
+<div class="crumb"><a href="/">자소서 글자수·바이트 계산기</a> › 안내</div>
+<h1>바이트 계산: 한글은 2바이트일까 3바이트일까</h1>
+<p class="note">확인일: 2026년 10월 30일 · 아래 출처의 법령과 공식 발표를 기준으로 작성했습니다.</p>
+<div class="sum"><ul><li>한글 한 글자: <b>EUC-KR·CP949 2바이트</b>, <b>UTF-8 3바이트</b></li><li>영문·숫자·공백: 두 방식 모두 <b>1바이트</b></li><li>이모지: UTF-8에서 보통 <b>4바이트</b></li><li>제한이 '바이트'로 적혀 있으면 어느 방식으로 세는지 먼저 확인하세요.</li></ul></div>
+
+<h2>인코딩별 바이트 수</h2>
+<div class="tw"><table><thead><tr><th>문자</th><th>EUC-KR · CP949</th><th>UTF-8</th></tr></thead><tbody>
+<tr><td>한글 1자 (가)</td><td>2바이트</td><td>3바이트</td></tr>
+<tr><td>영문·숫자·공백 (A, 1)</td><td>1바이트</td><td>1바이트</td></tr>
+<tr><td>줄바꿈</td><td>1~2바이트 (시스템에 따라)</td><td>1~2바이트</td></tr>
+<tr><td>이모지 (😀)</td><td>표현 불가</td><td>4바이트</td></tr></tbody></table></div>
+<p class="note">이 계산기의 EUC-KR 모드는 영문·숫자 같은 ASCII 문자는 1바이트, 나머지는 2바이트로 셉니다. 이모지처럼 EUC-KR에 없는 문자는 실제 시스템에서 깨지거나 거부될 수 있습니다.</p>
+<h2>계산 예</h2>
+<ul><li>"안녕하세요 Kiro" = 한글 5자 + 공백 1 + 영문 4자 → EUC-KR 15바이트, UTF-8 20바이트</li>
+<li>한글만 쓴다면 2,000바이트 제한(EUC-KR)은 약 1,000자, UTF-8이면 약 666자입니다.</li></ul>
+<h2>어디서 바이트를 따지나</h2>
+<ul><li><b>오래된 채용·공공 시스템:</b> 입력칸 제한을 바이트로 두는 곳이 있습니다. 보통 EUC-KR(완성형) 기준입니다.</li>
+<li><b>문자 메시지:</b> 국내 문자는 일반적으로 90바이트(한글 약 45자)를 넘으면 장문(LMS)으로 바뀝니다. 통신사·발송 서비스에 따라 다릅니다.</li>
+<li><b>웹·데이터베이스:</b> 대부분 UTF-8을 쓰므로 한글이 3바이트로 계산됩니다.</li></ul>
+<h2>EUC-KR과 CP949</h2>
+<p>EUC-KR은 자주 쓰는 한글 2,350자만 담은 완성형 규격이고, 마이크로소프트의 CP949(확장 완성형)는 현대 한글 11,172자를 모두 담습니다. 두 방식 모두 한글 한 글자를 2바이트로 저장합니다. '똠', '햏'처럼 EUC-KR에 없는 글자는 일부 오래된 시스템에서 깨질 수 있습니다.</p>
+
+<a class="cta" href="/">바이트 계산해 보기 →</a>
+<h2>자주 묻는 질문</h2>
+<div class="faq"><details><summary>바이트 제한인데 어떤 방식인지 모르겠어요.</summary><p>짧은 한글 문장을 넣어 보고, 시스템이 보여 주는 바이트 수가 글자수의 2배인지 3배인지 보면 알 수 있습니다.</p></details><details><summary>영어로 쓰면 더 많이 쓸 수 있나요?</summary><p>바이트 기준이면 그렇습니다. 영문은 1바이트라 같은 제한에 한글보다 2~3배 많은 글자가 들어갑니다.</p></details><details><summary>특수문자 ·, ※는 몇 바이트인가요?</summary><p>EUC-KR에서는 2바이트, UTF-8에서는 대부분 2~3바이트입니다.</p></details></div>
+<h2>출처</h2>
+<ul class="src"><li><a href="https://www.rfc-editor.org/rfc/rfc3629" rel="nofollow noopener" target="_blank">RFC 3629: UTF-8 (IETF)</a></li><li><a href="https://standard.go.kr/" rel="nofollow noopener" target="_blank">KS X 1001 (국가기술표준원 e나라표준인증)</a></li></ul>
+<p class="note">이 페이지는 일반적인 안내이며 법률·세무 자문이 아닙니다. 개인 사정에 따라 결과가 다를 수 있으니 중요한 결정 전에는 담당 기관에 확인하세요.</p>
+<h2>함께 보면 좋은 안내</h2>
+<div class="rel"><a href="/space-included-vs-excluded.html">글자수 세기: 공백 포함과 공백 제외, 무엇을 맞춰야 하나 →</a><a href="/">자소서 글자수·바이트 계산기 →</a></div>
+</main>
+<div class="ad" style="min-height:280px"><ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-2228289204702106" data-ad-slot="3416334507" data-ad-format="auto" data-full-width-responsive="true"></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script></div>
+<footer><a href="/">자소서 글자수·바이트 계산기</a><a href="/privacy.html">개인정보처리방침</a><a href="https://enjoy-onepage.com/">Enjoy OnePage 전체 도구</a></footer>
+</body>
+</html>
